@@ -1,3 +1,4 @@
+import "../models/Amenity.js";
 import Hotel from "../models/Hotel.js"; import Destination from "../models/Destination.js"; import HotelType from "../models/HotelType.js"; import Coupon from "../models/Coupon.js"; import RoomType from "../models/RoomType.js";
 export const getHomepageData=async(req,res)=>{try{const now=new Date(); const [destinations,featuredHotels,hotelTypes,deals]=await Promise.all([
 Destination.find({status:"ACTIVE",featured:true}).sort({sortOrder:1}).limit(8).lean(),
