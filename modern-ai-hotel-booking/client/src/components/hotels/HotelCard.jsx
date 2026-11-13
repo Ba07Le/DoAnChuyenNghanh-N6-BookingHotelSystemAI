@@ -11,24 +11,13 @@ function HotelCard({ hotel }) {
   };
 
   const getAmenityIcon = (amenity) => {
-    if (amenity.toLowerCase().includes("wi-fi")) {
-      return <Wifi size={14} />;
-    }
-
-    if (amenity.toLowerCase().includes("hồ bơi")) {
-      return <Waves size={14} />;
-    }
-
-    if (amenity.toLowerCase().includes("điều hòa")) {
-      return <Wind size={14} />;
-    }
-
-    if (amenity.toLowerCase().includes("bồn tắm")) {
-      return <Bath size={14} />;
-    }
-
-    return null;
-  };
+  const text = (typeof amenity === "string" ? amenity : amenity?.name || "").toLowerCase();
+  if (text.includes("wi-fi")) return <Wifi size={14} />;
+  if (text.includes("hồ bơi")) return <Waves size={14} />;
+  if (text.includes("điều hòa")) return <Wind size={14} />;
+  if (text.includes("bồn tắm")) return <Bath size={14} />;
+  return null;
+};
 
   return (
     <article className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl">
@@ -96,7 +85,7 @@ function HotelCard({ hotel }) {
             {/* Stars */}
             <div className="mt-2 flex items-center gap-2">
               <div className="flex">
-                {Array.from({ length: hotel.stars }).map((_, index) => (
+                {Array.from({ length: hotel.stars || 0 }).map((_, index) => (
                   <Star
                     key={index}
                     size={14}
@@ -112,7 +101,13 @@ function HotelCard({ hotel }) {
             <div className="mt-3 flex items-start gap-2 text-sm text-slate-500">
               <MapPin size={16} className="mt-0.5 shrink-0 text-slate-400" />
 
-              <span>{hotel.address}</span>
+              <span>
+  {typeof hotel.address === "string"
+    ? hotel.address
+    : [hotel.address?.addressLine, hotel.address?.district, hotel.address?.city]
+        .filter(Boolean)
+        .join(", ")}
+</span>
             </div>
 
             {/* Rating */}
@@ -138,16 +133,18 @@ function HotelCard({ hotel }) {
 
             {/* Amenities */}
             <div className="mt-5 flex flex-wrap gap-2">
-              {hotel.amenities.slice(0, 4).map((amenity) => (
-                <span
-                  key={amenity}
-                  className="flex items-center gap-1.5 rounded-lg bg-slate-50 px-2.5 py-1.5 text-xs text-slate-600"
-                >
-                  {getAmenityIcon(amenity)}
-
-                  {amenity}
-                </span>
-              ))}
+              {(hotel.amenities || []).slice(0, 4).map((amenity, i) => {
+  const label = typeof amenity === "string" ? amenity : amenity?.name;
+  return (
+    <span
+      key={amenity?._id || label || i}
+      className="flex items-center gap-1.5 rounded-lg bg-slate-50 px-2.5 py-1.5 text-xs text-slate-600"
+    >
+      {getAmenityIcon(amenity)}
+      {label}
+    </span>
+  );
+})}
             </div>
           </div>
 
