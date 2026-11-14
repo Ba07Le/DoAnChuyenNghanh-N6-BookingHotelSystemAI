@@ -17,7 +17,8 @@ const hotelSchema = new mongoose.Schema({
   isFeatured: { type: Boolean, default: false, index: true },
   hotelType: { type: String, enum: ["HOTEL", "RESORT", "VILLA", "APARTMENT", "HOMESTAY", "BOUTIQUE"], default: "HOTEL", index: true },
   averageRating: { type: Number, default: 0, min: 0, max: 5 },
-  reviewCount: { type: Number, default: 0 }
+  reviewCount: { type: Number, default: 0 },
+  embedding: { type: [Number], select: false }
 }, { timestamps: true, collection: "hotels" });
 hotelSchema.index({ location: "2dsphere" });
 hotelSchema.index({ "address.city": 1, status: 1 });
